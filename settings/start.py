@@ -5,9 +5,15 @@ from flask_pymongo import PyMongo
 app = Flask(__name__)
 api = Api(app)
 
-app.config['SCRETE_KEY'] = 'thisissecret'
+# app.config['SCRETE_KEY'] = 'thisissecret'
 app.config['MONGO_URI'] = 'mongodb://localhost:61297/notedb'
-db = PyMongo(app)
+
+mongo = PyMongo(app)
+
+class Subject(Resource):
+	def get(self, user_id):
+		connect = mongo.db.notedb
+		subjects = 
 
 class HelloWorld(Resource):
 	def get(self):
