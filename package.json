@@ -31,5 +31,17 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.21"
-  }
+  },
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agustin2791/notes.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/agustin2791/notes/issues"
+  },
+  "homepage": "https://github.com/agustin2791/notes#readme",
+  "description": ""
 }
