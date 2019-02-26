@@ -105,6 +105,21 @@ export default new Vuex.Store({
   			state.notes.splice(indexNote, 1, editNote);
   			return state.notes
   		}
+  	},
+  	'DELETE_NOTE'(state, note) {
+  		if (note) {
+  			let delNote = state.notes.find(function(note) { if (note.id == note) { return note }});
+  			let indexNote = state.notes.indexOf(delNote);
+  			state.notes.splice(indexNote, 1)
+  			return state.notes
+  		}
+  	},
+  	'NEW_CARD'(state, card) {
+  		if (card) {
+  			card.id = Math.floor(Math.random() * 100)
+  			state.flash_cards.push(card)
+  			return state.flash_cards
+  		}
   	}
   },
   actions: {
@@ -119,6 +134,9 @@ export default new Vuex.Store({
   	},
   	editNote({ commit }, changes) {
   		commit('EDIT_NOTE', changes)
+  	},
+  	newCard({ commit }, card) {
+  		commit('NEW_CARD', card)
   	}
   },
   getters: {
@@ -130,6 +148,9 @@ export default new Vuex.Store({
   	},
   	getNotes (state) {
   		return (sub, sec) => state.notes.filter(note => (note.subject_id == sub && note.section_id == sec))
+  	},
+  	getCards (state) {
+  		return (sub, sec) => state.flash_cards.filter(note => (note.subject_id == sub && note.section_id == sec))
   	}
   }
 })
