@@ -106,9 +106,9 @@ export default new Vuex.Store({
   			return state.notes
   		}
   	},
-  	'DELETE_NOTE'(state, note) {
-  		if (note) {
-  			let delNote = state.notes.find(function(note) { if (note.id == note) { return note }});
+  	'DELETE_NOTE'(state, note_id) {
+  		if (note_id) {
+  			let delNote = state.notes.find(function(note) { if (note.id == note_id) { return note }});
   			let indexNote = state.notes.indexOf(delNote);
   			state.notes.splice(indexNote, 1)
   			return state.notes
@@ -120,7 +120,25 @@ export default new Vuex.Store({
   			state.flash_cards.push(card)
   			return state.flash_cards
   		}
-  	}
+  	},
+  	'EDIT_CARD'(state, changes) {
+  		if (changes) {
+  			let editCard = state.flash_cards.find(function(card) { if (card.id == changes.id ) { return card }});
+  			let indexCard = state.flash_cards.indexOf(editCard);
+  			editCard.word = changes.word
+  			editCard.def = changes.def
+  			state.flash_cards.splice(indexCard, 1, editCard)
+  			return state.flash_cards
+  		}
+  	},
+  	'DELETE_CARD'(state, card_id) {
+	  	if (card_id) {
+	  		let delCard = state.flash_cards.find(function(card) { if (card.id == card_id) { return card }});
+	  		let indexCard = state.flash_cards.indexOf(delCard);
+	  		state.flash_cards.splice(indexCard, 1)
+	  		return state.flash_cards
+	  	}
+	  }
   },
   actions: {
   	newSubject({ commit }, subject) {
@@ -135,8 +153,17 @@ export default new Vuex.Store({
   	editNote({ commit }, changes) {
   		commit('EDIT_NOTE', changes)
   	},
+  	deletNote({ commit }, note_id) {
+  		commit('DELETE_CARD', note_id)
+  	},
   	newCard({ commit }, card) {
   		commit('NEW_CARD', card)
+  	},
+  	editCard({ commit }, changes) {
+  		commit('EDIT_CARD', changes)
+  	},
+  	deleteCard({ commit }, card_id) {
+  		commit('DELETE_CARD', card_id)
   	}
   },
   getters: {
