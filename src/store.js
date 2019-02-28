@@ -63,13 +63,76 @@ export default new Vuex.Store({
   	],
   	flash_cards: [
   		{
-  			id: 1,
-  			word: 'First word',
-  			def: 'This is the def of the first word',
-  			subject_id: 1,
-  			section_id: 1,
-  			user_id: 1
-  		}
+		  "id": 1,
+		  "word": "amet",
+		  "def": "Enterprise-wide hybrid capacity",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 2,
+		  "word": "erat",
+		  "def": "Intuitive zero defect system engine",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 3,
+		  "word": "congue",
+		  "def": "Multi-layered fault-tolerant attitude",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 4,
+		  "word": "donec",
+		  "def": "Customer-focused exuding firmware",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 5,
+		  "word": "diam",
+		  "def": "Distributed background policy",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 6,
+		  "word": "donec",
+		  "def": "Cloned full-range middleware",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 7,
+		  "word": "amet",
+		  "def": "Customer-focused leading edge project",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 8,
+		  "word": "sed",
+		  "def": "Up-sized non-volatile groupware",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 9,
+		  "word": "vestibulum",
+		  "def": "Balanced tertiary Graphical User Interface",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}, {
+		  "id": 10,
+		  "word": "primis",
+		  "def": "Optimized homogeneous definition",
+		  "subject_id": 1,
+		  "section_id": 1,
+		  "user_id": 1
+		}
   	]
   },
   mutations: {
@@ -169,6 +232,9 @@ export default new Vuex.Store({
   getters: {
   	getSubjects (state) {
   		return state.subjects
+  	},
+  	getAllSections (state) {
+  		return state.sections
   	},
   	getSections (state) {
   		return (sub) => state.sections.filter(sec => sec.subject_id == sub)

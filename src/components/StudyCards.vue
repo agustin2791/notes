@@ -1,6 +1,7 @@
 <template>
 	<div class="study" style="text-align: center;">
-		<button class="btn btn-primary">Shuffle</button>
+		<button class="btn btn-primary"
+			@click.prevent="shuffle">Shuffle</button>
 		<div class="card">
 			<div class="flash_card">
 				<div class="card-word" v-if="showSide == 0">{{ cards[show_card].word }}</div>
@@ -33,7 +34,28 @@
 		},
 		methods: {
 			shuffle() {
-
+				let unShuffle = this.list,
+					shuffled = [];
+				for (let i = (unShuffle.length - 1); i >= 0; i--) {
+					let randIndex = Math.floor(Math.random() * (i+1));
+					shuffled.push(unShuffle[randIndex]);
+					let temp = unShuffle[randIndex]
+					unShuffle.splice(randIndex, 1);
+					unShuffle.push(temp)
+				}
+				this.cards = shuffled;
+				for (let s in shuffled) {
+					console.log(shuffled[s].id + ": " + shuffled[s].word)
+				}
+				unShuffle.sort(function(a, b) {
+					if (a.id > b.id) {
+						return 1
+					} else if (a.id < b.id) {
+						return -1
+					} else {
+						return 0
+					}
+				})
 			},
 			prev() {
 				this.showSide = 0
@@ -89,5 +111,6 @@
 		padding: 5px 0;
 	}
 }
+
 </style>
 

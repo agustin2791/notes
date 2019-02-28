@@ -71,7 +71,9 @@
 			id="study"
 			size="xl"
 			title="Flash Card"
-			hide-footer>
+			hide-footer
+			hide-header
+			hide-header-close>
 			<app-study-cards v-if="showCards"
 				:list="flashCards">
 			</app-study-cards>
@@ -160,4 +162,11 @@
 			AppStudyCards: StudyCards 
 		}
 	}
+
 </script>
+
+<style lang="scss">
+#study {
+	background: #333;
+}
+</style>
