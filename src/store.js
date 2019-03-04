@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -201,6 +202,14 @@ export default new Vuex.Store({
 	  		state.flash_cards.splice(indexCard, 1)
 	  		return state.flash_cards
 	  	}
+	  },
+	  'GET_SUBJECT'(state, sub_id) {
+	  	if (sub_id) {
+	  		console.log(sub_id)
+	  		let subject = state.subjects.find( sub => { if (sub.id == sub_id) return sub });
+	  		console.log(subject.name)
+	  		return subject.name
+	  	}
 	  }
   },
   actions: {
@@ -227,6 +236,9 @@ export default new Vuex.Store({
   	},
   	deleteCard({ commit }, card_id) {
   		commit('DELETE_CARD', card_id)
+  	},
+  	getSubject({ commit }, sub_id) {
+  		commit('GET_SUBJECT', sub_id)
   	}
   },
   getters: {
@@ -244,6 +256,9 @@ export default new Vuex.Store({
   	},
   	getCards (state) {
   		return (sub, sec) => state.flash_cards.filter(note => (note.subject_id == sub && note.section_id == sec))
+  	},
+  	getSubjectName (state) {
+  		return (sub) => state.subjects.find(subject => (subject.id == sub)).name
   	}
   }
 })

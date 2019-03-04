@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
 	<div class="subjects row">
 		<div class="col-8 offset-2">
@@ -29,11 +30,12 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				subjects: this.$store.getters.getSubjects
-			}
+/* eslint-disable */
+export default {
+	data() {
+		return {
+			subjects: this.$store.getters.getSubjects
 		}
 	}
+}
 </script>

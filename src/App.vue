@@ -1,17 +1,18 @@
 <template>
   <div id="app">
-	<navigation></navigation>
+    <navigation></navigation>
     <router-view/>
   </div>
 </template>
 
 <script>
-	import Navigation from './components/Navigation.vue'
-	export default {
-		components: {
-			Navigation
-		}
+/* eslint-disable */
+import Navigation from './components/Navigation.vue'
+export default {
+	components: {
+		Navigation
 	}
+}
 </script>
 
 <style lang="scss">
