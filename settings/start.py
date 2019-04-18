@@ -107,16 +107,6 @@ class Section(Resource):
 		connect.delete_one(section)
 		return jsonify({'result': 'Section Deleted!'})
 
-
-
-# class HelloWorld(Resource):
-# 	def get(self):
-# 		return {'about': 'Hello World'}
-
-# 	def post(self):
-# 		some_json = request.get_json()
-# 		return {'you sent': some_json}, 201
-
 class Api(Resource):
 	def get(self, num):
 		return {'result': num*10}
