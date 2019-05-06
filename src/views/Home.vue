@@ -1,48 +1,42 @@
 <template>
   <div class="home">
     <div class="sidebar">
-		<h2>Subject</h2>
-		<select v-model="selected_sub" @change="selectSub($event, selected_sub)">
-			<option value="">Select Subject</option>
-			<option v-for="(sub, index) in subjects" :key="index" :value="sub.id">{{ sub.name }}</option>
-		</select><br><br>
-		<b-button v-b-modal.new_subject
-				  class="btn btn-success btn-sm">Add Subject</b-button>
-		<hr>
-		<h3 v-if="selected_sub">Section</h3>
-		<select v-if="selected_sub"
-			v-model="selected_sec"
-			@change="selectSec($event, selected_sec)">
-			<option value="">Select Section</option>
-			<option v-for="(sec, index) in sections" :key="index" :value="sec.id">{{ sec.name }}</option>
-		</select>
-		<br>
-		<br>
-    	<!-- <b-button v-b-modal.new_subject
-				  class="btn btn-success btn-block">New Subject</b-button> -->
-    	<!-- <hr>
-		<div class="list-group list-group-flush">
-			<a href
-				v-for="sub in subjects"
-				:key="sub.id"
-				class="list-group-item list-group-action"
-				:class="{ active: (selected_sub == sub.id) }"
-				@click="selectSub($event, sub.id)">{{ sub.name }}</a>
-		</div> -->
-    <!-- </div>
-    <div v-if="selected_sub" class="col-2"> -->
-		<app-sections
-		    v-if="selected_sub"
-			:subject="selected_sub"
-			@newSecSubmitted="updateSec">
-			<div class="list-group list-group-flush">
-				<a href
-					class="list-group-item list-group-sction"
-					v-for="sec in sections" :key="sec.id"
-					:class="{ active: (selected_sec == sec.id) }"
-					@click="selectSec($event, sec.id)">{{ sec.name }}</a>
+		<div class="row">
+			<div class="col-6">
+				<select v-model="selected_sub" @change="selectSub($event, selected_sub)">
+					<option value="">Select Subject</option>
+					<option v-for="(sub, index) in subjects" :key="index" :value="sub.id">{{ sub.name }}</option>
+				</select>
+				<div class="row">
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<em>Subject</em>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 text-md-right">
+						<b-button v-b-modal.new_subject class="btn btn-sm add-btn">Add Subject</b-button>
+					</div>
+				</div>
 			</div>
-		</app-sections>
+			<div class="col-6" v-if="selected_sub">
+				<select v-if="selected_sub"
+					v-model="selected_sec"
+					@change="selectSec($event, selected_sec)">
+					<option value="">Select Section</option>
+					<option v-for="(sec, index) in sections" :key="index" :value="sec.id">{{ sec.name }}</option>
+				</select>
+				<div class="row">
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<em>Section</em>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 text-md-right">
+						<app-sections
+							v-if="selected_sub"
+							:subject="selected_sub"
+							@newSecSubmitted="updateSec">
+						</app-sections>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div v-if="selected_sec" class="notes-content">
 		<ul class="nav nav-tabs">
@@ -146,31 +140,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.home {
-	width: 100%;
-	display: block;
-	.sidebar {
-		border: solid thin #333;
-		padding: 20px 5px;
-		margin: 5px;
-		width: 20%;
-		display: inline-block;
-		vertical-align: top;
-		select {
-			width: 100%;
-			background: #fff;
-			height: 40px;
-			border: solid thin #333;
-			border-radius: 0px;
-		}
-	}
-	.notes-content {
-		width: 75%;
-		display: inline-block;
-		vertical-align: top;
-		margin: 5px;
-	}
-}
-
+<style lang="scss">
+// @import '../assets/custom.scss';
 </style>
+

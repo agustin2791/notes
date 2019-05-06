@@ -1,9 +1,7 @@
 <template>
 	<div class="sections">
 		<b-button v-b-modal.new_section
-				  class="btn btn-success btn-sm">New Section</b-button>
-		<!-- <hr>
-		<slot></slot> -->
+				  class="btn btn-sm add-btn">New Section</b-button>
 		<b-modal id="new_section"
 				 title="New Section"
 				 hide-footer

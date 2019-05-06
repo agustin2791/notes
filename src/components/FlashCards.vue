@@ -1,14 +1,11 @@
 <template>
 	<div class="flash">
-		<br>
-		<b-button v-b-modal.new_card variant="primary">Add Card</b-button><span>&nbsp;</span>
-		<b-button v-b-modal.study
-			variant="primary"
-			@click.prevent="triggerStudy">Study</b-button>
-		<br>
-		<br>
-		
-		<br><br>
+		<div class="add-note-flash">
+			<b-button v-b-modal.new_card variant="primary">Add Card</b-button><span>&nbsp;</span>
+			<b-button v-b-modal.study
+				variant="primary"
+				@click.prevent="triggerStudy">Study</b-button>
+		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>

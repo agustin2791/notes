@@ -1,12 +1,10 @@
 <template scope="props">
 	<div class="notes">
 		<br>
-		<button class="btn btn-primary"
+		<button class="btn btn-primary add-note-flash"
 			@click="newNoteDisplay = true">
 			Add Note
 		</button>
-		<br>
-		<br>
 		<div v-if="newNoteDisplay"
 			class="form-group">
 			<form>
@@ -22,7 +20,6 @@
 				</button>
 			</form>
 		</div>
-		<hr>
 		<div v-for="note in notes"
 			 :key="note.id">
 			<div v-if="editCurrentNote == note.id">
@@ -33,7 +30,7 @@
 					Save
 				</button>
 				<button class="btn btn-default"
-					@click.preven="clearEdit">
+					@click.prevent="clearEdit">
 						Cancel
 				</button>
 			</div>
