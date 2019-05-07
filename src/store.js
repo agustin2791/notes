@@ -210,6 +210,11 @@ export default new Vuex.Store({
 	  		console.log(subject.name)
 	  		return subject.name
 	  	}
+	  },
+	  'DELETE_SUBJECT'(state, sub_id) {
+		  if (sub_id) {
+			  // delete subject
+		  }
 	  }
   },
   actions: {
@@ -239,7 +244,10 @@ export default new Vuex.Store({
   	},
   	getSubject({ commit }, sub_id) {
   		commit('GET_SUBJECT', sub_id)
-  	}
+	},
+	deleteSubject({ commit }, sub_id) {
+		commit('DELETE_SUBJECT', sub_id)
+	}
   },
   getters: {
   	getSubjects (state) {
