@@ -2,11 +2,13 @@ from flask import Flask, jsonify, request, url_for, session, redirect
 from flask_restful import Resource, Api
 from flask_pymongo import PyMongo, MongoClient
 from flask_user import login_required, UserManager, UserMixin
+
 import bcrypt
 from bson.objectid import ObjectId
 from api.subjects import AllSubjects, Subject
 from api.sections import AllSections, Section
-
+from user import UserRegister, UserAuth
+import datetime
 # app = Flask(__name__)
 # api = Api(app)
 
@@ -15,7 +17,7 @@ from api.sections import AllSections, Section
 # db = MongoEngine(app)
 
 class ConfigClass(object):
-	SECRET_KEY = 'Iy4qLzM1WeHzhJVTbKF0jplDgQS3p8Jl'
+	
 	MONGO_URI = 'mongodb://localhost:27017/notesdb'
 	USER_APP_NAME = 'Notes App'
 	USER_ENABLE_EMAIL = False
@@ -32,6 +34,8 @@ def start_app():
 	api = Api(app)
 	db = PyMongo(app)
 
+
+
 	# class User(db.Document, UserMixin):
 	# 	meta = {'collection': 'admin'}
 	# 	active = db.BooleanField(default=True)
@@ -45,6 +49,10 @@ def start_app():
 	api.add_resource(Subject, '/api/subjects/<subject_id>')
 	api.add_resource(AllSections, '/api/sections/<subject_id>')
 	api.add_resource(Section, '/api/section/<section_id>')
+	app.add_url_rule('/auth/register', view_func=UserRegister.as_view('userregister'))
+	app.add_url_rule('/auth/login', view_func=UserAuth.as_view('userauth'))
+
+
 
 	return app
 
