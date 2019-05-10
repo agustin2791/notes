@@ -2,15 +2,16 @@ from flask import Flask, jsonify, request, url_for, session, redirect
 from flask.views import MethodView
 from flask_restful import Resource, Api
 from flask_pymongo import PyMongo
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, jwt_refresh_token_required, jwt_required, create_access_token, create_refresh_token
 from flask_bcrypt import Bcrypt
 from bson.objectid import ObjectId
 import datetime
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/notesdb'
-app.config['JWT_SECRET_KEY'] = 'Iy4qLzM1WeHzhJVTbKF0jplDgQS3p8Jl'
+app.config['JWT_SECRET_KEY'] = '0rgFhiQ7vrgEOaoU5NnY_ZCommoZgelFKa1dxGc0TK3b_KwNIKeTaSTjOVNWjm_38WArirTrmmhY8DSg8OPC6hvCw62X0DaRxZVCW8Z-fVJeJdX005R6oVlCxMES1aAT_3RYDWiMf-Dv9dF0-uhgZq48yumOYYObpGQ8jlJ_g5M5Lm0oLgHb_LVUhE8cpgshER4OZkLu5pR49X_gynKFxjC2tRTn886-vry3NFzM1yFmz3bja_RGj8cW07RbfjIEr9O4ieRr5rXzYNGtoSeix19jOPEsOpE4_HDbOKOosHnr2qZl3Q4M4gKbsyLvovD4TnNJ7piI7ua4TDB40qfuuw'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=2)
+app.config['JWT_ALGORITHM'] = 'HS256'
 api = Api(app)
 db = PyMongo(app)
 jwt = JWTManager(app)
@@ -71,7 +72,7 @@ class UserRegister(MethodView):
 			return jsonify({'ok': True, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
 class UserAuth(MethodView):
-	def post():
+	def post(self):
 		data = validate_user(request.get_json())
 		if data['ok']:
 			data = data['data']
@@ -82,8 +83,16 @@ class UserAuth(MethodView):
 				refresh_token = create_refresh_token(identity=data)
 				user['token'] = access_token
 				user['refresh'] = refresh_token
+				user['_id'] = str(user['_id'])
 				return jsonify({'ok': True, 'data': user}), 200
 			else:
 				return jsonify({'ok': False, 'message': 'invalid username or password'}), 401
 		else:
 			return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
+
+class User(MethodView):
+	decorators = [jwt_required]
+	def get(self):
+		query = request.args
+		data = db.db.users.find_one(query)
+		return jsonify({'ok': True, 'data': data})
