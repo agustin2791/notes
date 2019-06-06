@@ -2,6 +2,7 @@
   <div id="app">
     <navigation></navigation>
     <router-view/>
+    
   </div>
 </template>
 
@@ -11,7 +12,10 @@ import Navigation from './components/Navigation.vue'
 export default {
 	components: {
 		Navigation
-	}
+	},
+  created() {
+    this.$store.dispatch('loginCheck');
+  }
 }
 </script>
 

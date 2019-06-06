@@ -26,7 +26,7 @@
 				</thead>
 				<tbody>
 					<tr v-for="s in sections" :key="s.id">
-						<td>{{ s.name }}</td>
+						<td>{{ s.section }}</td>
 						<td>{{ getSubject(s.subject_id) }}</td>
 						<td style="text-align: right">
 							<button type="button"
@@ -50,7 +50,6 @@
 export default {
 	data() {
 		return {
-			sections: this.$store.getters.getAllSections,
 			newSection: null,
 			subjectSel: null,
 		}
@@ -60,10 +59,13 @@ export default {
 			let subjects = this.$store.getters.getSubjects;
 			let subs = [];
 			for (let i in subjects) {
-				let sub = {value: subjects[i].id, text: subjects[i].name};
+				let sub = {value: subjects[i].id, text: subjects[i].subject};
 				subs.push(sub)
 			}
 			return subs;
+		},
+		sections() {
+			return this.$store.getters.getAllSections
 		}
 	},
 	methods: {
@@ -73,13 +75,15 @@ export default {
 		},
 		addSection() {
 			let new_sec = {
-				name: this.newSection,
-				subject_id: this.subjectSel,
-				user_id: 1
+				section: this.newSection,
+				subject_id: this.subjectSel
 			};
-			this.$store.dispatch('newSection', new_sec);
-			this.newSection = null;
-			this.subjectSel = null;
+			this.$store.dispatch('newSection', new_sec)
+				.then(res => {
+					this.newSection = null;
+					this.subjectSel = null;
+				});
+			
 		}
 	}
 }

@@ -11,29 +11,36 @@ connect = db.db.subject
 
 class AllSubjects(Resource):
     # connect = db.db.subject
-    def get(self):
+    def get(self, user_id):
         # connect = db.db.subject
-        subjects = []
-        for c in connect.find():
-            subjects.append({'id': str(c['_id']), 'subject': c['subject']})
-        return jsonify({'results': subjects})
+        subject = connect.find({'user_id': user_id})
+        pretty_subjects = []
+        for s in subject:
+            pretty_subjects.append({
+                'id': str(s['_id']),
+                'subject': s['subject'],
+                'user_id': s['user_id']
+                })
+        return jsonify({'results': {'subject': pretty_subjects}})
 
-    def post(self):
+    def post(self, user_id):
         # connect = db.db.subject
         new_sub = request.json['subject']
-        connect.insert({'subject': new_sub})
+        print user_id
+        connect.insert({'subject': new_sub, 'user_id': user_id})
         subjects = []
-        for c in connect.find():
-            subjects.append({'id': str(c['_id']), 'subject': c['subject']})
+        for c in connect.find({'user_id': user_id}):
+            subjects.append({'id': str(c['_id']), 'subject': c['subject'], 'user_id': c['user_id']})
         return jsonify({'success': True, 'results': subjects})
 
 # Single subject, meant to update and delete subject
 class Subject(Resource):
     # connect = db.db.subject
     def get(self, subject_id):
-        # connect = db.db.subject
-        subject = connect.find_one({'_id': ObjectId(subject_id)})
-        return jsonify({'results': {'id': str(subject['_id']), 'subeject': subject['subject']}})
+        subject = request.json['subject_id']
+        data = connect.find_one({'_id': ObjectId(subject_id)})
+        data['_id'] = str(data['_id'])
+        return jsonify({'results': {'subject': data}})
 
     def put(self, subject_id):
         # connect = db.db.subject
@@ -45,6 +52,8 @@ class Subject(Resource):
     def delete(self, subject_id):
         # connect = db.db.subject
         subject = connect.find_one({'_id': ObjectId(subject_id)})
+        sections = connect.find({'subject_id': subject_id})
+        
         deleted_sub = {'id': str(subject['_id']), 'subject': subject['subject']}
         connect.delete_one(subject)
         return jsonify({'deleted': deleted_sub})

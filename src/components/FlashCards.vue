@@ -104,13 +104,15 @@
 					word: this.newCard.term,
 					def: this.newCard.def,
 					subject_id: this.subject,
-					section_id: this.section,
-					user_id: 1
+					section_id: this.section
 				};
 				this.$store.dispatch('newCard', card)
-				this.flashCards = this.$store.getters.getCards(this.subject, this.section)
-				this.$root.$emit('bv::hide::modal', 'new_card')
-				this.newCard = {term: null, def: null}
+					.then(res => {
+						this.flashCards = this.$store.getters.getCards(this.subject, this.section)
+						this.$root.$emit('bv::hide::modal', 'new_card')
+						this.newCard = {term: null, def: null}
+					})
+				
 			},
 			startEdit(card) {
 				this.editCard.id = card.id

@@ -3,10 +3,13 @@ from flask_restful import Resource, Api
 from flask_pymongo import PyMongo, MongoClient
 from flask_user import login_required, UserManager, UserMixin
 from flask_jwt_extended import JWTManager, jwt_refresh_token_required
+from flask_cors import CORS
 import bcrypt
 from bson.objectid import ObjectId
 from api.subjects import AllSubjects, Subject
 from api.sections import AllSections, Section
+from api.notes import Notes, Note
+from api.flash_cards import Cards
 from user import UserRegister, UserAuth, User
 import datetime
 # app = Flask(__name__)
@@ -36,6 +39,10 @@ def start_app():
 	api = Api(app)
 	db = PyMongo(app)
 	jwt = JWTManager(app)
+	cors = CORS(app)
+	# cors = CORS(app, origins=["http://127.0.0.1:8080","http://localhost:8080"], allow_headers=[
+ #    	"Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+ #    	supports_credentials=True)
 
 
 	# class User(db.Document, UserMixin):
@@ -47,10 +54,13 @@ def start_app():
 	# user_manager = UserManager(app, db, User)
 
 	# api.add_resource(Api, '/api/<int:num>')
-	api.add_resource(AllSubjects, '/api/subjects')
-	api.add_resource(Subject, '/api/subjects/<subject_id>')
-	api.add_resource(AllSections, '/api/sections/<subject_id>')
-	api.add_resource(Section, '/api/section/<section_id>')
+	api.add_resource(AllSubjects, '/api/subjects/<user_id>')
+	api.add_resource(Subject, '/api/subjects/subject/<subject_id>')
+	api.add_resource(AllSections, '/api/sections/<user_id>')
+	api.add_resource(Section, '/api/sections/section/<section_id>')
+	api.add_resource(Notes, '/api/notes/<user_id>')
+	api.add_resource(Note, '/api/notes/note/<note_id>')
+	api.add_resource(Cards, '/api/flash_cards/<user_id>')
 	app.add_url_rule('/auth/register', view_func=UserRegister.as_view('userregister'))
 	app.add_url_rule('/auth/login', view_func=UserAuth.as_view('userauth'))
 	app.add_url_rule('/auth/user', view_func=User.as_view('user'))

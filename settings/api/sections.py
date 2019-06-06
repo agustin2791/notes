@@ -11,28 +11,31 @@ connect = db.db.section
 # Section API, gets all sections and adds new section
 class AllSections(Resource):
     # connect = db.db.section
-    def get(self, subject_id):
+    def get(self, user_id):
         # connect = db.db.section
         # sub_sections = connect.find({'subject_id': subject_id})
         sections = []
-        for s in connect.find({'subject_id': subject_id}):
+        for s in connect.find({'user_id': user_id}):
             sections.append({
                 'id': str(s['_id']),
                 'section': s['section'],
-                'subject_id': s['subject_id']
+                'subject_id': s['subject_id'],
+                'user_id': s['user_id']
                 })
         return jsonify({'results': sections})
 
-    def post(self, subject_id):
+    def post(self, user_id):
         # connect = db.db.section
         section = request.json['section']
-        connect.insert({'section': section, 'subject_id': subject_id})
+        subject_id = request.json['subject_id']
+        connect.insert({'section': section, 'subject_id': subject_id, 'user_id': user_id})
         sections = []
         for s in connect.find({'subject_id': subject_id}):
             sections.append({
                 'id': str(s['_id']),
                 'section': s['section'],
-                'subject_id': s['subject_id']
+                'subject_id': s['subject_id'],
+                'user_id': user_id
                 })
         return jsonify({'success': True, 'results': sections})
 

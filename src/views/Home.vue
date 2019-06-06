@@ -5,7 +5,7 @@
 			<div class="col-6">
 				<select v-model="selected_sub" @change="selectSub($event, selected_sub)">
 					<option value="">Select Subject</option>
-					<option v-for="(sub, index) in subjects" :key="index" :value="sub.id">{{ sub.name }}</option>
+					<option v-for="(sub, index) in subjects" :key="index" :value="sub.id">{{ sub.subject }}</option>
 				</select>
 				<div class="row">
 					<div class="col-md-6 col-sm-6 col-xs-12">
@@ -21,7 +21,7 @@
 					v-model="selected_sec"
 					@change="selectSec($event, selected_sec)">
 					<option value="">Select Section</option>
-					<option v-for="(sec, index) in sections" :key="index" :value="sec.id">{{ sec.name }}</option>
+					<option v-for="(sec, index) in sections" :key="index" :value="sec.id">{{ sec.section }}</option>
 				</select>
 				<div class="row">
 					<div class="col-md-6 col-sm-6 col-xs-12">
@@ -87,7 +87,6 @@ export default {
   name: 'home',
   data () {
   	return {
-  		subjects: [],
   		sections: [],
   		notes: [],
   		selected_sub: null,
@@ -120,12 +119,13 @@ export default {
   	submitSubject(e) {
 		e.preventDefault()
 		let new_sub = {
-			name: this.new_subject,
-			user_id: 1
+			subject: this.new_subject
 		};
 		this.$store.dispatch('newSubject', new_sub)
-		this.new_subject = null
-		this.$root.$emit('bv::hide::modal', 'new_subject')
+			.then(res => {
+				this.new_subject = null
+				this.$root.$emit('bv::hide::modal', 'new_subject')
+			})		
 	}
   },
   components: {
@@ -133,8 +133,11 @@ export default {
   	AppNotes: Notes,
   	AppFlashCards: FlashCards
   },
-  created () {
-  	this.subjects = this.$store.getters.getSubjects
+  computed: {
+  	subjects() {
+  		let subs = this.$store.getters.getSubjects
+  		return subs
+  	}
   }
 
 }
@@ -142,5 +145,21 @@ export default {
 
 <style lang="scss">
 // @import '../assets/custom.scss';
+	.loading {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1000;
+		background: rgba(0, 0, 0, 0.75);
+		.center-spinner {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			color: #fff;
+		}
+	}
 </style>
 

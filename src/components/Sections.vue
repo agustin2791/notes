@@ -16,7 +16,6 @@
 						   v-model="secTitle"
 						   class="form-control col-sm-9">
 				</div>
-				{{ subject }}
 				<button class="btn btn-primary"
 						@click="submitForm($event)">Submit</button>
 			</form>
@@ -36,7 +35,7 @@ export default {
 		validateTitle() {
 			let sections = this.$store.getters('getSections', this.subject)
 			for (sec in sections) {
-				if (sections[sec].name == this.secTitle) {
+				if (sections[sec].section == this.secTitle) {
 					return true
 				}
 			}
@@ -47,14 +46,16 @@ export default {
 		submitForm(e) {
 			e.preventDefault()
 			let new_sec = {
-				name: this.secTitle,
-				subject_id: this.subject,
-				user_id: 1
+				section: this.secTitle,
+				subject_id: this.subject
 			};
 			this.$store.dispatch('newSection', new_sec)
-			this.$emit('newSecSubmitted')
-			this.secTitle = null
-			this.$root.$emit('bv::hide::modal', 'new_section')
+				.then(res => {
+					this.$emit('newSecSubmitted')
+					this.secTitle = null
+					this.$root.$emit('bv::hide::modal', 'new_section')
+				})
+			
 		}
 	}
 }

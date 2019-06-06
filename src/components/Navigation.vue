@@ -12,18 +12,41 @@
               <b-dropdown-item to="/subjects">Subject Info</b-dropdown-item>
               <b-dropdown-item to="/sections">Section Info</b-dropdown-item>
             </b-nav-item-dropdown>
-
-            <b-nav-item-dropdown right>
+            <b-nav-item v-if="user == 'Login'" to="/login">Login</b-nav-item>
+            <b-nav-item v-if="user == 'Login'" to="/register">Register</b-nav-item>
+            <b-nav-item-dropdown right v-if="user != 'Login'">
               <!-- Using button-content slot -->
-              <template slot="button-content"><em>User</em></template>
+              <template slot="button-content"><em>{{user.username}}</em></template>
               <b-dropdown-item href="#">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Signout</b-dropdown-item>
+              <b-dropdown-item @click="signOut">Logout</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
     </div>
 </template>
+
+<script type="text/javascript">
+  export default {
+    data() {
+      return {
+
+      }
+    },
+    methods: {
+      signOut() {
+        this.$store.dispatch('logout')
+      }
+    },
+    computed: {
+      user() {
+        let user = this.$store.getters.getUser;
+        if (user == null) return 'Login'
+        return user
+      }
+    }
+  }
+</script>
 
 <style lang="scss" scoped>
 .bg-info {

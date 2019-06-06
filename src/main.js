@@ -10,8 +10,26 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(VueTextareaAutosize)
 
+Vue.mixin({
+	data(){
+		return {
+			isLoading: false,
+		}
+	},
+	methods: {
+		loading() {
+			console.log(this.isLoading)
+			this.isLoading = true
+			console.log(this.isLoading)
+		},
+		notLoading() {
+			this.isLoading = false
+		}
+	}
+})
+
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+	store,
+	router,
+	render: h => h(App)
 }).$mount('#app')

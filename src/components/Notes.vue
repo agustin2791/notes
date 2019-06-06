@@ -39,6 +39,11 @@
 				@click="startEdit(note.id)"
 				v-else>{{ note.note }}</p>
 		</div>
+    <div v-if="isLoading" class="loading">
+      <div class="center-spinner">
+        Logging in... <b-spinner variant="success" label="Logging in..."></b-spinner>
+      </div>
+    </div>
 	</div>
 </template>
 
@@ -47,7 +52,7 @@ export default {
   props: ['subject', 'section'],
   data () {
     return {
-    	notes: [],
+    	// notes: [],
     	newNoteDisplay: false,
 	    newNote: null,
 	    editCurrentNote: null,
@@ -55,19 +60,27 @@ export default {
 	    noteEdit: null
     }
   },
+  computed: {
+    notes() {
+      return this.$store.getters.getNotes(this.subject, this.section)
+    }
+  },
   methods: {
   	createNewNote(e) {
   		e.preventDefault()
+      this.loading()
   		let nuNote = {
   			note: this.newNote,
   			subject_id: this.subject,
-  			section_id: this.section,
-  			user_id: 1
+  			section_id: this.section
   		}
   		this.$store.dispatch('newNote', nuNote)
-  		this.notes = this.$store.getters.getNotes(this.subject, this.section)
-  		this.newNoteDisplay = false
-  		this.newNote = null
+        .then(res => {
+            this.notLoading()
+            this.newNoteDisplay = false
+            this.newNote = null
+        })
+  		
   	},
   	startEdit(note_id) {
   		let toEdit = this.notes.find(function(note) {
@@ -95,7 +108,7 @@ export default {
   	}
   },
   created() {
-  	this.notes = this.$store.getters.getNotes(this.subject, this.section)
+  	
   }
 }
 </script>

@@ -27,7 +27,7 @@
 				</thead>
 				<tbody>
 					<tr v-for="s in sortedSubjects" :key="s.id">
-						<td>{{ s.name }}</td>
+						<td>{{ s.subject }}</td>
 						<td style="text-align: right">
 							<button type="button"
 								class="btn btn-primary">
@@ -65,7 +65,6 @@
 export default {
 	data() {
 		return {
-			subjects: this.$store.getters.getSubjects,
 			isSorted: false,
 			sort: null,
 			toDelete: false,
@@ -74,6 +73,10 @@ export default {
 		}
 	},
 	computed: {
+	  	subjects() {
+	  		let subs = this.$store.getters.getSubjects
+	  		return subs
+	  	},
 		sortedSubjects() {
 			let subs = this.subjects;
 			if (this.isSorted && this.sort == 'asc') {
@@ -112,8 +115,7 @@ export default {
 		addSubject() {
 			if (this.newSubject != null) {
 				let newSub = {
-					name: this.newSubject,
-					user_id: 1
+					subject: this.newSubject
 				};
 				this.$store.dispatch('newSubject', newSub);
 			}

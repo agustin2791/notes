@@ -3,8 +3,11 @@ from flask.views import MethodView
 from flask_restful import Resource, Api
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager, jwt_refresh_token_required, jwt_required, create_access_token, create_refresh_token
+from flask_cors import cross_origin
 from flask_bcrypt import Bcrypt
 from bson.objectid import ObjectId
+from base64 import b64decode
+import json
 import datetime
 
 app = Flask(__name__)
@@ -56,10 +59,26 @@ def validate_user(data):
 		return {'ok': False, 'message': e}
 	return {'ok': True, 'data': data}
 
+def decode_auth_token(auth_token):
+    """
+    Decodes the auth token
+    :param auth_token:
+    :return: integer|string
+    """
+    # try:
+    tokenParts = auth_token.split('.')
+    tokenPayload = b64decode(tokenParts[1])
+    jsonPayload = json.loads(tokenPayload)
+    return jsonPayload['identity']['username']
+    # except jwt.ExpiredSignatureError:
+    #     return 'Signature expired. Please log in again.'
+    # except:
+    #     return
 class UserRegister(MethodView):
 	def post(self):
 		data = validate_user(request.get_json())
 		if data['ok']:
+			password = data['data']['password']
 			data = data['data']
 			if db.db.users.find_one({'username': data['username']}) is not None:
 				return jsonify({'ok': False, 'message': 'username already exists'}), 400
@@ -67,20 +86,28 @@ class UserRegister(MethodView):
 				return jsonify({'ok': False, 'message': 'Email already exists'}), 400
 			data['password'] = flask_bcrypt.generate_password_hash(data['password'])
 			db.db.users.insert_one(data)
-			return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
+			data['_id'] = str(data['_id'])
+			data['password'] = password
+			return jsonify({'ok': True, 'data': data}), 200
 		else:
 			return jsonify({'ok': True, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
 class UserAuth(MethodView):
+	# decorators = [cross_origin]
 	def post(self):
 		data = validate_user(request.get_json())
+		expires = datetime.timedelta(days=7)
 		if data['ok']:
 			data = data['data']
-			user = db.db.users.find_one({'username': data['username']})
+			username = data['username']
+			if '@' in username:
+				user = db.db.users.find_one({'email': username})
+			else:
+				user = db.db.users.find_one({'username': data['username']})
 			if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
 				del user['password']
-				access_token = create_access_token(identity=data)
-				refresh_token = create_refresh_token(identity=data)
+				access_token = create_access_token(identity=data, expires_delta=expires)
+				refresh_token = create_refresh_token(identity=data, expires_delta=expires)
 				user['token'] = access_token
 				user['refresh'] = refresh_token
 				user['_id'] = str(user['_id'])
@@ -93,6 +120,19 @@ class UserAuth(MethodView):
 class User(MethodView):
 	decorators = [jwt_required]
 	def get(self):
-		query = request.args
-		data = db.db.users.find_one(query)
-		return jsonify({'ok': True, 'data': data})
+		auth = request.headers.get('Authorization')
+		if auth:
+			token = auth.split(' ')[1]
+		else:
+			token = None
+		if token:
+			resp = decode_auth_token(token)
+			print('id: ', resp)
+			if '@' in resp:
+				data = db.db.users.find_one({'email': resp})
+			else:
+				data = db.db.users.find_one({'username': resp })
+			del data['password']
+			data['_id'] = str(data['_id'])
+			return jsonify({'ok': True, 'data': data}), 200
+		return jsonify({'msg': 'No Token provided'})
