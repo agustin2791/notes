@@ -17,26 +17,12 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
-      beforeRouterEnter (to, from, next) {
-        if (state.state.idToken) {
-          next()
-        } else {
-          next('/login')
-        }
-      }
+      component: Home
     },
     {
       path: '/subjects',
       name: 'subjects',
-      component: Subjects,
-      beforeRouterEnter (to, from, next) {
-        if (state.state.idToken) {
-          next()
-        } else {
-          next('/login')
-        }
-      }
+      component: Subjects
     },
     {
       path: '/sections',
@@ -53,26 +39,12 @@ export default new Router({
     {
       path: '/register',
       name: 'register',
-      component: Register,
-      beforeEnter (to, from, next) {
-        if (state.state.idToken) {
-          next('/')
-        } else {
-          next()
-        }
-      }
+      component: Register
     },
     {
       path: '/login',
       name: 'login',
-      component: Login,
-      beforeEnter (to, from, next) {
-        if (state.state.idToken) {
-          next('/')
-        } else {
-          next()
-        }
-      }
+      component: Login
     }
   ]
 })

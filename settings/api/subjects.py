@@ -47,13 +47,25 @@ class Subject(Resource):
         edit = request.json['edit']
         subject = connect.find_one({'_id': ObjectId(subject_id)})
         connect.update_one({'_id': ObjectId(subject_id)}, {'$set': {'subject': edit}}, upsert=False)
-        return jsonify({'id': str(subject['_id']), 'subject': subject['subject']})
+        return jsonify({'id': str(subject['_id']), 'subject': edit})
 
     def delete(self, subject_id):
         # connect = db.db.subject
         subject = connect.find_one({'_id': ObjectId(subject_id)})
-        sections = connect.find({'subject_id': subject_id})
+        sections = db.db.section.find({'subject_id': subject_id})
+        notes = db.db.notes.find({'subject_id': subject_id})
+        flash = db.db.flash_cards.find({'subject_id': subject_id})
         
         deleted_sub = {'id': str(subject['_id']), 'subject': subject['subject']}
         connect.delete_one(subject)
+        if sections:
+            for s in sections:
+                print(s)
+                db.db.section.delete_one(s)
+        if notes:
+            for n in notes:
+                db.db.notes.delete_one(n)
+        if flash:
+            for f in flash:
+                db.db.flash_cards.delete_one(f)
         return jsonify({'deleted': deleted_sub})

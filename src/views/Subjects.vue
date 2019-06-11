@@ -27,11 +27,33 @@
 				</thead>
 				<tbody>
 					<tr v-for="s in sortedSubjects" :key="s.id">
-						<td>{{ s.subject }}</td>
+						<td>
+							<input type="text" 
+								name="edit_subject"
+								class="form-control"
+								v-model="edit"
+								v-if="editId === s.id">
+							<p v-else>{{ s.subject }}</p>
+						</td>
 						<td style="text-align: right">
 							<button type="button"
-								class="btn btn-primary">
+								class="btn btn-primary"
+								@click.prevent="startEdit(s.id)"
+								v-if="editId != s.id">
 								Edit
+							</button>
+							&nbsp;
+							<button type="button"
+								class="btn btn-primary"
+								@click.prevent="submitEdit"
+								v-if="editId === s.id">
+								Submit		
+							</button>
+							<button type="text"
+								class="btn btn-default"
+								@click.prevent="cancelEdit"
+								v-if="editId === s.id">
+								Cancel		
 							</button>&nbsp;
 							<button type="button"
 								class="btn btn-danger"
@@ -51,7 +73,7 @@
 				<div class="confirm-content">
 					<p>You are about to delete this Subject</p>
 					<div class="confirm-buttons">
-						<button class="btn btn-danger">Yes, Delete</button>
+						<button class="btn btn-danger" @click.prevent="confirmDel">Yes, Delete</button>
 						<button class="btn btn-info" @click.prevent="cancelDel">Cancel</button>
 					</div>
 				</div>
@@ -67,6 +89,8 @@ export default {
 		return {
 			isSorted: false,
 			sort: null,
+			editId: null,
+			edit: null,
 			toDelete: false,
 			deleteId: null,
 			newSubject: null
@@ -121,12 +145,30 @@ export default {
 			}
 			this.newSubject = null;
 		},
+		startEdit(id) {
+			this.toEdit = true
+			this.editId = id
+			this.edit = this.subjects.find(sub => {
+				if (sub.id === id) {
+					return sub
+				}
+			}).subject
+		},
+		submitEdit() {
+			this.$store.dispatch('editSubject', {id: this.editId, edit: this.edit})
+			this.editId = null
+			this.edit = null
+		},
+		cancelEdit() {
+			this.editId = null
+			this.edit = null
+		},
 		deleteSubject(id) {
 			this.deleteId = id;
 			this.toDelete = true;
 		},
 		confirmDel() {
-			this.$store.dispatch('deleteSubject');
+			this.$store.dispatch('deleteSubject', this.deleteId);
 			this.toDelete = false;
 			this.deleteId = null;
 		},

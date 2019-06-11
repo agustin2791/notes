@@ -102,9 +102,23 @@ export default new Vuex.Store({
 	  		return subject.name
 	  	}
 	  },
+    'EDIT_SUBJECT'(state, sub) {
+      console.log(sub)
+       if (sub) {
+         for (let s in state.subjects) {
+           if (state.subjects[s].id == sub.id) {
+             state.subjects[s].subject = sub.subject
+           }
+         }
+       }
+    },
 	  'DELETE_SUBJECT'(state, sub_id) {
 		  if (sub_id) {
 			  // delete subject
+        let subject = state.subjects.find(sub => { if (sub.id == sub_id) return sub})
+        let indexSub = state.subjects.indexOf(subject)
+        state.subjects.splice(indexSub, 1)
+        return state.subjects
 		  }
 	  },
     // Authentication
@@ -158,7 +172,8 @@ export default new Vuex.Store({
   		
   	},
   	editNote({ commit }, changes) {
-  		commit('EDIT_NOTE', changes)
+      commit('EDIT_NOTE', changes)
+      return axios.put('http://localhost:5000/api/notes/note/' + changes.id, changes)  		
   	},
   	deletNote({ commit }, note_id) {
   		commit('DELETE_CARD', note_id)
@@ -180,8 +195,18 @@ export default new Vuex.Store({
   	getSubject({ commit }, sub_id) {
   		commit('GET_SUBJECT', sub_id)
   	},
+    editSubject({ commit }, sub) {
+      return axios.put('http://localhost:5000/api/subjects/subject/' + sub.id, sub)
+        .then(res => {
+          commit('EDIT_SUBJECT', res.data)
+        })
+    },
   	deleteSubject({ commit }, sub_id) {
   		commit('DELETE_SUBJECT', sub_id)
+      return axios.delete('http://localhost:5000/api/subjects/subject/' + sub_id)
+        .then(res => {
+          console.log(res)
+        })
   	},
     // Populate States
     populateData({ commit }, user_id) {

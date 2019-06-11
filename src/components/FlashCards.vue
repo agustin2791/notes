@@ -6,6 +6,7 @@
 				variant="primary"
 				@click.prevent="triggerStudy">Study</b-button>
 		</div>
+		<br><br>
 		<table class="table table-striped">
 			<thead>
 				<tr>

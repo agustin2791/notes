@@ -28,7 +28,6 @@ class Notes(Resource):
 		sec_id = request.json['section_id']
 		note = request.json['note']
 		new_note = connect.insert({'note': note, 'subject_id': sub_id, 'section_id': sec_id, 'user_id': user_id})
-		print new_note
 		return_note = {
 			'id': str(new_note),
 			'note':  note,
@@ -45,7 +44,7 @@ class Note(Resource):
 		return jsonify({'results': note})
 
 	def put(self, note_id):
-		update_note = request.json['note']
+		update_note = request.json['edit']
 		note = connect.find_one({'_id': ObjectId(note_id)})
 		connect.update_one({'_id': ObjectId(note_id)}, {'$set': {'note': update_note}}, upsert=False)
 		return jsonify({'updated': True})
