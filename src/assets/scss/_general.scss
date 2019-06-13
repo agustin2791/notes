@@ -1,0 +1,98 @@
+$main-color:#34495e;
+$secondaty-color: #bdc3c7;
+$link: #9b59b6;
+$dark: #333;
+$light: #ecf0f1;
+
+a {
+    color: $link;
+}
+.btn {
+    border-radius: 0;
+}
+.btn-primary {
+    background: $main-color;
+    border: solid thin $main-color;
+    &:focus, &:active, &:hover {
+        background: darken($main-color, 5%);
+        -webkit-box-shadow: 0 0 0 0.1rem rgba(100, 100, 100, 0.5);
+        box-shadow: 0 0 0 0.2rem rgba(100, 100, 100, 0.5); 
+    }
+}
+.home {
+	width: 100%;
+	display: block;
+	.sidebar {
+		// border: solid thin #333;
+		background: $secondaty-color;
+		padding: 20px 15px;
+		margin: 0px auto;
+        width: 100%;
+        max-width: 1500px;
+		vertical-align: top;
+		.add-btn {
+			font-size: small;
+			background: $main-color;
+			border: solid thin $main-color;
+			&:focus, &:active {
+				background: darken($main-color, 5%);
+				-webkit-box-shadow: 0 0 0 0.1rem rgba(100, 100, 100, 0.5);
+				box-shadow: 0 0 0 0.2rem rgba(100, 100, 100, 0.5); 
+			}
+		}
+		select {
+			width: 100%;
+			background: #fff;
+			height: 30px;
+			border: solid thin #333;
+			border-radius: 0px;
+			margin-bottom: 5px;
+		}
+	}
+	.notes-content {
+        width: 80%;
+        max-width: 1500px;
+		margin: 15px auto;
+	}
+}
+.notes, .flash {
+    position: relative;
+    .add-note-flash {
+        height: 35px;
+        font-size: small;
+        position: absolute;
+        top: -40px;
+        right: 2px;
+        button {
+            height: 35px;
+            font-size: small;
+        }
+    }
+}
+
+.sort-option {
+	width: auto;
+	display: inline-block;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.confirm-delete {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: block;
+	background: rgba(0, 0, 0, 0.5);
+	.confirm-container {
+		padding: 30px;
+		background: #fff;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		text-align: center;
+	}
+}
+.row {margin: 0px;}
