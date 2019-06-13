@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Index from './views/Index.vue'
 import Subjects from './views/Subjects.vue'
 import Sections from './views/Sections.vue'
 import Register from './views/auth/Register.vue'
 import Login from './views/auth/Login.vue'
 
-import state from './store'
+import store from './store'
 
 Vue.use(Router)
 
@@ -16,23 +17,42 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'index',
+      component: Index
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Home,
+      beforeEnter(to, from, next) {
+        if (store.state.idToken) {
+          next()
+        } else {
+          next('/')
+        }
+      }
     },
     {
       path: '/subjects',
       name: 'subjects',
-      component: Subjects
+      component: Subjects,
+      beforeEnter(to, from, next) {
+        if (store.state.idToken) {
+          next()
+        } else {
+          next('/')
+        }
+      }
     },
     {
       path: '/sections',
       name: 'sections',
       component: Sections,
-      beforeRouterEnter (to, from, next) {
-        if (state.state.idToken) {
+      beforeEnter(to, from, next) {
+        if (store.state.idToken) {
           next()
         } else {
-          next('/login')
+          next('/')
         }
       }
     },

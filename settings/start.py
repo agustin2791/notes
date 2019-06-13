@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, url_for, session, redirect
+from flask import Flask, jsonify, request, url_for, session, redirect, render_template
 from flask_restful import Resource, Api
 from flask_pymongo import PyMongo, MongoClient
 from flask_user import login_required, UserManager, UserMixin
@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 from api.subjects import AllSubjects, Subject
 from api.sections import AllSections, Section
 from api.notes import Notes, Note
-from api.flash_cards import Cards
+from api.flash_cards import Cards, Card
 from user import UserRegister, UserAuth, User
 import datetime
 # app = Flask(__name__)
@@ -34,7 +34,9 @@ class ConfigClass(object):
 # 		return {'result': num*10}
 
 def start_app():
-	app = Flask(__name__)
+	app = Flask(__name__,
+				static_folder="../dist/static",
+				template_folder="../dist")
 	app.config.from_object(__name__+'.ConfigClass')
 	api = Api(app)
 	db = PyMongo(app)
@@ -61,6 +63,7 @@ def start_app():
 	api.add_resource(Notes, '/api/notes/<user_id>')
 	api.add_resource(Note, '/api/notes/note/<note_id>')
 	api.add_resource(Cards, '/api/flash_cards/<user_id>')
+	api.add_resource(Card, '/api/flash_cards/flash_card/<card_id>')
 	app.add_url_rule('/auth/register', view_func=UserRegister.as_view('userregister'))
 	app.add_url_rule('/auth/login', view_func=UserAuth.as_view('userauth'))
 	app.add_url_rule('/auth/user', view_func=User.as_view('user'))
@@ -74,10 +77,15 @@ def start_app():
 		}
 		return jsonify({'ok': True, 'data': ret}), 200
 
+	@app.route('/', defaults={'path': ''})
+	@app.route('/<path:path>')
+	def catch_all(path):
+		return render_template("index.html")
+
 
 
 	return app
 
 if __name__ == '__main__':
 	app = start_app()
-	app.run(debug=True)
+	app.run(debug=False)

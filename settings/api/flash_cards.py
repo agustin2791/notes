@@ -49,4 +49,14 @@ class Card(Resource):
 		return jsonify({'results': card})
 
 	def put(self, card_id):
-		pass
+		# card = connect.find_one({'_id': ObjectId(card_id)})
+		word = request.json['word']
+		deff = request.json['def']
+
+		connect.update_one({'_id': ObjectId(card_id)}, {'$set': {'word': word, 'def': deff}}, upsert=False)
+		return jsonify({'updated': True})
+
+	def delete(self, card_id):
+		card = connect.find_one({'_id': ObjectId(card_id)})
+		connect.delete_one(card)
+		return jsonify({'deleted': True})

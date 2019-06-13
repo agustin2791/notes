@@ -73,7 +73,6 @@ export default new Vuex.Store({
   	},
   	'NEW_CARD'(state, card) {
   		if (card) {
-  			card.id = Math.floor(Math.random() * 100)
   			state.flash_cards.push(card)
   			return state.flash_cards
   		}
@@ -103,7 +102,6 @@ export default new Vuex.Store({
 	  	}
 	  },
     'EDIT_SUBJECT'(state, sub) {
-      console.log(sub)
        if (sub) {
          for (let s in state.subjects) {
            if (state.subjects[s].id == sub.id) {
@@ -121,6 +119,23 @@ export default new Vuex.Store({
         return state.subjects
 		  }
 	  },
+    'EDIT_SECTION'(state, changes) {
+      if (changes) {
+        let sec = state.sections.find(s => { if (s.id === changes.id ) { return s }});
+        let secId = state.sections.indexOf(sec);
+        sec.section = changes.edit;
+        state.sections.splice(secId, 1, sec);
+        return;
+      }
+    },
+    'DELETE_SECTION'(state, sec_id) {
+      if (sec_id) {
+        let sec = state.sections.find(s => { if (s.id === sec_id ) { return s }});
+        let secId = state.sections.indexOf(sec);
+        state.sections.splice(secId, 1)
+        return;
+      }
+    },
     // Authentication
     'AUTH_USER'(state, auth) {
       state.idToken = auth.token
@@ -147,7 +162,7 @@ export default new Vuex.Store({
   actions: {
   	async newSubject({ commit, state }, subject) {
       subject.user_id = state.user.id
-      return axios.post('http://localhost:5000/api/subjects/' + subject.user_id, subject)
+      return axios.post(/* http://localhost:5000 */'/api/subjects/' + subject.user_id, subject)
         .then(res => {
           let update_sub = res.data.results
           commit('NEW_SUBJECT', update_sub)
@@ -155,77 +170,85 @@ export default new Vuex.Store({
   	},
   	async newSection({ commit, state }, section) {
       section.user_id = state.user.id
-      return axios.post('http://localhost:5000/api/sections/' + section.user_id, section)
+      return axios.post(/* http://localhost:5000 */'/api/sections/' + section.user_id, section)
         .then(res => {
-          console.log(res)
-          commit('NEW_SECTION', section);
+          commit('NEW_SECTION', res.data.results.reverse()[0]);
         })
   	},
   	async newNote({ commit, state }, note) {
       note.user_id = state.user.id
-      return axios.post('http://localhost:5000/api/notes/' + note.user_id, note)
+      return axios.post(/* http://localhost:5000 */'/api/notes/' + note.user_id, note)
         .then(res => {
           let update = res.data.results
-          console.log(update)
           commit('NEW_NOTE', update)
         })
   		
   	},
   	editNote({ commit }, changes) {
       commit('EDIT_NOTE', changes)
-      return axios.put('http://localhost:5000/api/notes/note/' + changes.id, changes)  		
+      return axios.put(/* http://localhost:5000 */'/api/notes/note/' + changes.id, changes)  		
   	},
   	deletNote({ commit }, note_id) {
   		commit('DELETE_CARD', note_id)
   	},
     async newCard({ commit, state }, flash_card) {
       flash_card.user_id = state.user.id
-      return axios.post('http://localhost:5000/api/flash_cards/' + flash_card.user_id, flash_card)
+      return axios.post(/* http://localhost:5000 */'/api/flash_cards/' + flash_card.user_id, flash_card)
         .then(res => {
-          console.log(res)
           commit('NEW_CARD', res.data.results)
         })
     },
   	editCard({ commit }, changes) {
   		commit('EDIT_CARD', changes)
+      return axios.put(/* http://localhost:5000 */'/api/flash_cards/flash_card/' + changes.id, changes)
+        .then(res => {
+          console.log(res)
+        })
   	},
   	deleteCard({ commit }, card_id) {
   		commit('DELETE_CARD', card_id)
+      return axios.delete(/* http://localhost:5000 */'/api/flash_cards/flash_card/' + card_id)
   	},
   	getSubject({ commit }, sub_id) {
   		commit('GET_SUBJECT', sub_id)
   	},
     editSubject({ commit }, sub) {
-      return axios.put('http://localhost:5000/api/subjects/subject/' + sub.id, sub)
+      return axios.put(/* http://localhost:5000 */'/api/subjects/subject/' + sub.id, sub)
         .then(res => {
           commit('EDIT_SUBJECT', res.data)
         })
     },
+    editSection({ commit }, changes) {
+      commit('EDIT_SECTION', changes)
+      return axios.put(/* http://localhost:5000 */'/api/sections/section/' + changes.id, changes)
+    },
+    deleteSection({ commit }, sec_id) {
+      commit('DELETE_SECTION', sec_id)
+      return axios.delete(/* http://localhost:5000 */'/api/sections/section/' + sec_id)
+    },
   	deleteSubject({ commit }, sub_id) {
   		commit('DELETE_SUBJECT', sub_id)
-      return axios.delete('http://localhost:5000/api/subjects/subject/' + sub_id)
+      return axios.delete(/* http://localhost:5000 */'/api/subjects/subject/' + sub_id)
         .then(res => {
-          console.log(res)
         })
   	},
     // Populate States
     populateData({ commit }, user_id) {
-      console.log('Get section func: ' + user_id)
       // sections
-      axios.get('http://localhost:5000/api/subjects/' + user_id)
+      axios.get(/* http://localhost:5000 */'/api/subjects/' + user_id)
         .then(res => {
           commit('SET_SUBJECTS', res.data.results)
         })
       // subjects
-      axios.get('http://localhost:5000/api/sections/' + user_id)
+      axios.get(/* http://localhost:5000 */'/api/sections/' + user_id)
         .then(res => {
           commit('SET_SECTIONS', res.data.results)
         })
-      axios.get('http://localhost:5000/api/notes/' + user_id)
+      axios.get(/* http://localhost:5000 */'/api/notes/' + user_id)
          .then(res => {
            commit('SET_NOTES', res.data.results)
          })
-      axios.get('http://localhost:5000/api/flash_cards/' + user_id)
+      axios.get(/* http://localhost:5000 */'/api/flash_cards/' + user_id)
         .then(res => {
           commit('SET_CARDS', res.data.results)
         })
@@ -240,16 +263,17 @@ export default new Vuex.Store({
         "password": authData.password
       };
       // let dispatch = JSON.parse(newRegister);
-      return axios.post('http://localhost:5000/auth/register', newRegister)
+      return axios.post(/* http://localhost:5000 */'/auth/register', newRegister)
         .then(res => {
-          dispatch('login', res.data.data);
+          console.log('new register: ' + res)
+          return dispatch('login', res.data.data);
         })
         .catch(err => {
           console.log(err)
         })
     },
     async login({ commit, dispatch }, authData) {
-      return axios.post('http://localhost:5000/auth/login', {
+      return axios.post(/* http://localhost:5000 */'/auth/login', {
         username: authData.username,
         password: authData.password
       })
@@ -274,12 +298,11 @@ export default new Vuex.Store({
       const now = new Date()
       if (now >= duration) return;
       if (now <= duration) {
-        axios.get('http://localhost:5000/auth/user', {headers: {'Authorization': 'Bearer ' + token}})
+        axios.get(/* http://localhost:5000 */'/auth/user', {headers: {'Authorization': 'Bearer ' + token}})
           .then(res => {
             if (res.data.ok) {
               let data = res.data.data;
               data.token = token;
-              console.log(data)
               commit('AUTH_USER', data)
               dispatch('populateData', data._id)
             }
@@ -312,6 +335,9 @@ export default new Vuex.Store({
   	},
   	getSubjectName (state) {
   		return (sub) => state.subjects.find(subject => (subject.id == sub)).subject
-  	}
+  	},
+    // filterSections (state) {
+    //   return (sub) => state.sections.filter(secs => (secs.subject_id == sub))
+    // }
   }
 })

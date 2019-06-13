@@ -26,21 +26,56 @@
 				</thead>
 				<tbody>
 					<tr v-for="s in sections" :key="s.id">
-						<td>{{ s.section }}</td>
+						<td>
+							<input type="text" 
+								v-model="editSec"
+								class="form-control"
+								v-if="editId == s.id">
+							<p v-else>{{ s.section }}</p>
+						</td>
 						<td>{{ getSubject(s.subject_id) }}</td>
 						<td style="text-align: right">
 							<button type="button"
-								class="btn btn-primary">
+								class="btn btn-primary"
+								v-if="!editId"
+								@click.prevent="editSection(s.id)">
 								Edit
+							</button>
+							<button type="button"
+								class="btn btn-primary"
+								v-if="editId == s.id"
+								@click.prevent="submitEdit">
+								Update
+							</button>
+							<button type="button"
+								class="btn btn-primary"
+								v-if="editId == s.id"
+								@click.prevent="cancelEdit">
+								Cancel
 							</button>&nbsp;
 							<button type="button"
-								class="btn btn-danger">
+								class="btn btn-danger"
+								@click.prevent="deleteSection(s.id)">
 								Delete
 							</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		<div v-if="toDelete" class="confirm-delete">
+			<div class="confirm-container">
+				<div class="confirm-title">
+					<h2>Are you sure?</h2>
+				</div>
+				<div class="confirm-content">
+					<p>You are about to delete this Section</p>
+					<div class="confirm-buttons">
+						<button class="btn btn-danger" @click.prevent="confirmDel">Yes, Delete</button>
+						<button class="btn btn-info" @click.prevent="cancelDel">Cancel</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -52,6 +87,10 @@ export default {
 		return {
 			newSection: null,
 			subjectSel: null,
+			editId: null,
+			editSec: null,
+			toDelete: false,
+			secDelId: null
 		}
 	},
 	computed: {
@@ -65,6 +104,9 @@ export default {
 			return subs;
 		},
 		sections() {
+			if (this.subjectSel) {
+				return this.$store.getters.getSections(this.subjectSel)
+			}
 			return this.$store.getters.getAllSections
 		}
 	},
@@ -84,7 +126,46 @@ export default {
 					this.subjectSel = null;
 				});
 			
+		},
+		editSection(id) {
+			let sec = this.sections.find(s => {
+				if (s.id == id) {
+					return s
+				}
+			})
+			this.editSec = sec.section
+			this.editId = id
+		},
+		cancelEdit() {
+			this.editId = null
+			this.editSec = null
+		},
+		submitEdit() {
+			let changes = {id: this.editId, edit: this.editSec}
+			this.$store.dispatch('editSection', changes)
+			this.editId = null
+			this.editSec = null
+		},
+		submitSection() {
+			let changes = {id: this.editId, edit: this.editSec}
+			this.$store.dispatch('editSection', changes)
+			this.editId = null
+			this.editSec = null
+		},
+		deleteSection(sec) {
+			this.toDelete = true
+			this.secDelId = sec
+		},
+		confirmDel() {
+			this.$store.dispatch('deleteSection', this.secDelId)
+			this.toDelete = false
+			this.secDelId = null
+		},
+		cancelDel() {
+			this.toDelete = false
+			this.secDelId = null
 		}
+
 	}
 }
 </script>

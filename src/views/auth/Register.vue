@@ -108,10 +108,12 @@ export default {
             if (this.register.password == this.register.conf_pass) {
                 this.$store.dispatch('register', this.register)
                     .then(res => {
+                        console.log(res)
                         if (res.status === 'ok') {
-                            this.$router.push('/')
+                            this.$router.push('/dashboard')
                             this.notLoading()
                         } else {
+                            console.log('Error')
                             this.notLoading()
                         }  
                     })

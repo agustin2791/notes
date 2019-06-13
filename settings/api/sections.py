@@ -64,6 +64,14 @@ class Section(Resource):
 
     def delete(self, section_id):
         # connect = db.db.section
-        section = connect.find_one({'_id', ObjectId(section_id)})
+        section = connect.find_one({'_id': ObjectId(section_id)})
+        notes = db.db.notes.find({'section_id': section_id})
+        flash_cards = db.db.flash_cards.find({'section_id': section_id})
         connect.delete_one(section)
+        if notes:
+            for n in notes:
+                db.db.notes.delete_one(n)
+        if flash_cards:
+            for f in flash_cards:
+                db.db.flash_cards.delete_one(f)
         return jsonify({'result': 'Section Deleted!'})

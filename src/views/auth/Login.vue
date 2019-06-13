@@ -57,7 +57,7 @@
 				this.$store.dispatch('login', this.login)
 					.then(res => {
 						if (res.status === 'ok') {
-							this.$router.push('/')
+							this.$router.push('/dashboard')
 							this.notLoading()
 							this.logErr = false;
 						} else {

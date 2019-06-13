@@ -60,7 +60,6 @@ class Subject(Resource):
         connect.delete_one(subject)
         if sections:
             for s in sections:
-                print(s)
                 db.db.section.delete_one(s)
         if notes:
             for n in notes:
