@@ -26,7 +26,7 @@ class AllSubjects(Resource):
     def post(self, user_id):
         # connect = db.db.subject
         new_sub = request.json['subject']
-        print user_id
+        print(user_id)
         connect.insert({'subject': new_sub, 'user_id': user_id})
         subjects = []
         for c in connect.find({'user_id': user_id}):

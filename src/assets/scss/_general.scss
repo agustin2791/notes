@@ -19,17 +19,35 @@ a {
         box-shadow: 0 0 0 0.2rem rgba(100, 100, 100, 0.5); 
     }
 }
+.clear-bg {
+	background: rgba(0, 0, 0, 0);
+	border: none;
+	a.list-group-item {
+		background: rgba(0, 0, 0, 0);
+		border: solid thin rgba(0, 0, 0, 0);
+		&.active {
+			color: $light;
+			border-bottom: solid thin $dark;
+		}
+	}
+}
 .home {
 	width: 100%;
-	display: block;
+	display: flex;
+	position: fixed;
+	align-items: stretch;
+	height: 100%;
 	.sidebar {
 		// border: solid thin #333;
 		background: $secondaty-color;
 		padding: 20px 15px;
-		margin: 0px auto;
+		margin: 0px 10px 0px 0px;
         width: 100%;
-        max-width: 1500px;
+        max-width: 250px;
 		vertical-align: top;
+		height: 100%;
+		padding-bottom: 5px;
+		position: relative;
 		.add-btn {
 			font-size: small;
 			background: $main-color;
@@ -51,8 +69,10 @@ a {
 	}
 	.notes-content {
         width: 80%;
-        max-width: 1500px;
+        // display: inline-block;
+        // max-width: 1500px;
 		margin: 15px auto;
+		vertical-align: top;
 	}
 }
 .notes, .flash {

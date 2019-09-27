@@ -2,38 +2,24 @@
   <div class="home">
     <div class="sidebar">
 		<div class="row">
-			<div class="col-6">
+			<div class="col-12">
 				<select v-model="selected_sub" @change="selectSub($event, selected_sub)">
 					<option value="">Select Subject</option>
 					<option v-for="(sub, index) in subjects" :key="index" :value="sub.id">{{ sub.subject }}</option>
 				</select>
-				<div class="row">
-					<div class="col-md-6 col-sm-6 col-xs-12">
-						<em>Subject</em>
-					</div>
-					<div class="col-md-6 col-sm-6 col-xs-12 text-md-right">
-						<b-button v-b-modal.new_subject class="btn btn-sm add-btn">Add Subject</b-button>
-					</div>
-				</div>
+				
+				<b-button v-b-modal.new_subject class="btn btn-sm btn-block add-btn">Add Subject</b-button>
+				<hr>
 			</div>
-			<div class="col-6" v-if="selected_sub">
-				<select v-if="selected_sub"
-					v-model="selected_sec"
-					@change="selectSec($event, selected_sec)">
-					<option value="">Select Section</option>
-					<option v-for="(sec, index) in sections" :key="index" :value="sec.id">{{ sec.section }}</option>
-				</select>
-				<div class="row">
-					<div class="col-md-6 col-sm-6 col-xs-12">
-						<em>Section</em>
-					</div>
-					<div class="col-md-6 col-sm-6 col-xs-12 text-md-right">
-						<app-sections
-							v-if="selected_sub"
-							:subject="selected_sub"
-							@newSecSubmitted="updateSec">
-						</app-sections>
-					</div>
+			<div class="col-12" v-if="selected_sub">
+				<app-sections
+					v-if="selected_sub"
+					:subject="selected_sub"
+					@newSecSubmitted="updateSec">
+				</app-sections>
+				<br>
+				<div class="list-group-flush clear-bg">
+					<a v-for="(sec, index) in sections" :key="index" @click="selectSec($event, sec.id)" class="list-group-item list-group-item-action" :class="{active: sec.id == selected_sec}" href>{{ sec.section }}</a>
 				</div>
 			</div>
 		</div>
@@ -106,9 +92,15 @@ export default {
   	},
   	selectSec (e, sec) {
   		e.preventDefault()
-  		this.notes = []
-  		this.notes = this.$store.getters.getNotes(this.selected_sub, sec)
   		this.selected_sec = sec
+  		// this.notes = []
+  		let notes = this.$store.getters.getNotes(this.selected_sub, sec)
+  		if (notes.length == 0 || notes == null) {
+  			this.notes = []
+  		} else {
+  			this.notes = notes
+  		}
+  		// this.selected_sec = sec
   	},
   	updateSub () {
   		this.subjects = this.$store.getters.getSubjects
