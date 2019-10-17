@@ -21,7 +21,7 @@ import datetime
 
 class ConfigClass(object):
 	
-	MONGO_URI = 'mongodb://localhost:27017/notesdb'
+	MONGO_URI = 'mongodb://mongod:27017/notesdb'
 	USER_APP_NAME = 'Notes App'
 	USER_ENABLE_EMAIL = False
 	USER_ENABLE_USERNAME = True
@@ -88,4 +88,4 @@ def start_app():
 
 if __name__ == '__main__':
 	app = start_app()
-	app.run(debug=False)
+	app.run(debug=False, host='0.0.0.0', port=80)

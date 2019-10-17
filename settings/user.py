@@ -11,7 +11,7 @@ import json
 import datetime
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/notesdb'
+app.config['MONGO_URI'] = 'mongodb://mongod:27017/notesdb'
 app.config['JWT_SECRET_KEY'] = '0rgFhiQ7vrgEOaoU5NnY_ZCommoZgelFKa1dxGc0TK3b_KwNIKeTaSTjOVNWjm_38WArirTrmmhY8DSg8OPC6hvCw62X0DaRxZVCW8Z-fVJeJdX005R6oVlCxMES1aAT_3RYDWiMf-Dv9dF0-uhgZq48yumOYYObpGQ8jlJ_g5M5Lm0oLgHb_LVUhE8cpgshER4OZkLu5pR49X_gynKFxjC2tRTn886-vry3NFzM1yFmz3bja_RGj8cW07RbfjIEr9O4ieRr5rXzYNGtoSeix19jOPEsOpE4_HDbOKOosHnr2qZl3Q4M4gKbsyLvovD4TnNJ7piI7ua4TDB40qfuuw'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=2)
 app.config['JWT_ALGORITHM'] = 'HS256'

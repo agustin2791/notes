@@ -4,7 +4,7 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/notesdb'
+app.config['MONGO_URI'] = 'mongodb://mongod:27017/notesdb'
 api = Api(app)
 db = PyMongo(app)
 connect = db.db.flash_cards
