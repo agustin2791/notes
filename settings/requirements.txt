@@ -21,7 +21,7 @@ Flask-User==1.0.1.5
 Flask-WTF==0.14.2
 ipaddress==1.0.22
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 jsonschema==3.0.1
 MarkupSafe==1.1.0
 mongoengine==0.17.0
